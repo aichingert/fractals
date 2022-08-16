@@ -13,7 +13,13 @@ namespace srp {
             SrpWindow(int w, int h, std::string name);
             ~SrpWindow();
 
+            SrpWindow(const SrpWindow &) = delete;
+            SrpWindow &operator=(const SrpWindow &) = delete;
+
             bool shouldClose() { return glfwWindowShouldClose(window); }
+
+            void createWindowSurface(VkInstance instance, VkSurfaceKHR *surface);
+
         private:
 
             void initWindow();

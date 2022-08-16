@@ -2,6 +2,7 @@
 
 #include "srp_window.hpp"
 #include "srp_pipeline.hpp"
+#include "srp_device.hpp"
 
 namespace srp {
     class App {
@@ -12,7 +13,13 @@ namespace srp {
             void run();
         
         private:
-            SrpWindow srpWindow{WIDTH, HEIGTH, "Hello Vulkan!"};
-            SrpPipeline srpPipeline{"../shaders/simple_shader.vert.spv", "../shaders/simple_shader.frag.spv"};
+            SrpWindow srpWindow{WIDTH, HEIGTH, "Sierpinski triangle"};
+            SrpDevice srpDevice{srpWindow};
+            SrpPipeline srpPipeline{
+                srpDevice, 
+            "../shaders/simple_shader.vert.spv", 
+            "../shaders/simple_shader.frag.spv", 
+            SrpPipeline::defaultPipelineConfigInfo(WIDTH, HEIGTH)
+            };
     };
 }

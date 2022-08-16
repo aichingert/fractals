@@ -1,5 +1,7 @@
 #include "srp_window.hpp"
 
+#include <stdexcept>
+
 namespace srp {
 
     SrpWindow::SrpWindow(int w, int h, std::string name) : width{w}, height{h}, windowName{name} {
@@ -18,4 +20,11 @@ namespace srp {
 
         window = glfwCreateWindow(width, height, windowName.c_str(), nullptr, nullptr);
     }
+
+    void SrpWindow::createWindowSurface(VkInstance instance, VkSurfaceKHR *surface) {
+        if (glfwCreateWindowSurface(instance, window, nullptr, surface) != VK_SUCCESS) {
+            throw std::runtime_error("Failed to create window surface");
+        }
+    }
+
 }
