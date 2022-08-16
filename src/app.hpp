@@ -1,6 +1,7 @@
 #pragma once
 
 #include "srp_window.hpp"
+#include "srp_pipeline.hpp"
 
 namespace srp {
     class App {
@@ -12,5 +13,6 @@ namespace srp {
         
         private:
             SrpWindow srpWindow{WIDTH, HEIGTH, "Hello Vulkan!"};
+            SrpPipeline srpPipeline{"../shaders/simple_shader.vert.spv", "../shaders/simple_shader.frag.spv"};
     };
 }
