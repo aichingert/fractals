@@ -8,18 +8,18 @@ namespace srp {
     class App {
         public:
             static constexpr int WIDTH = 800;
-            static constexpr int HEIGTH = 600;
+            static constexpr int HEIGHT = 600;
 
             void run();
         
         private:
-            SrpWindow srpWindow{WIDTH, HEIGTH, "Sierpinski triangle"};
+            SrpWindow srpWindow{WIDTH, HEIGHT, "Sierpinski triangle"};
             SrpDevice srpDevice{srpWindow};
             SrpPipeline srpPipeline{
                 srpDevice, 
-            "../shaders/simple_shader.vert.spv", 
-            "../shaders/simple_shader.frag.spv", 
-            SrpPipeline::defaultPipelineConfigInfo(WIDTH, HEIGTH)
+                "../shaders/simple_shader.vert.spv", 
+                "../shaders/simple_shader.frag.spv", 
+                SrpPipeline::defaultPipelineConfigInfo(WIDTH, HEIGHT)
             };
     };
 }

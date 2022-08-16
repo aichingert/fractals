@@ -7,7 +7,20 @@
 
 
 namespace srp {
-    struct PipelineConfigInfo {};
+    struct PipelineConfigInfo {
+        VkViewport viewport;
+        VkRect2D scissor;
+        VkPipelineViewportStateCreateInfo viewportInfo;
+        VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo;
+        VkPipelineRasterizationStateCreateInfo rasterizationInfo;
+        VkPipelineMultisampleStateCreateInfo multisampleInfo;
+        VkPipelineColorBlendAttachmentState colorBlendAttachment;
+        VkPipelineColorBlendStateCreateInfo colorBlendInfo;
+        VkPipelineDepthStencilStateCreateInfo depthStencilInfo;
+        VkPipelineLayout pipelineLayout = nullptr;
+        VkRenderPass renderPass = nullptr;
+        uint32_t subpass = 0;
+    };
 
     class SrpPipeline {
         public:
@@ -16,12 +29,12 @@ namespace srp {
                 const std::string &vertFilepath, 
                 const std::string &fragFilepath, 
                 const PipelineConfigInfo &configInfo);
-            ~SrpPipeline() {}
+            ~SrpPipeline();
 
             SrpPipeline(const SrpPipeline&) = delete;
             void operator=(const SrpPipeline&) = delete;
 
-            static PipelineConfigInfo defaultPipelineConfigInfo(uint32_t width, uint32_t heigth);
+            static PipelineConfigInfo defaultPipelineConfigInfo(uint32_t width, uint32_t height);
 
         private:
             static std::vector<char> readFile(const std::string &filepath);
