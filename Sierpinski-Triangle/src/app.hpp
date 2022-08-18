@@ -5,23 +5,34 @@
 #include "srp_device.hpp"
 #include "srp_swap_chain.hpp"
 
+#include <memory>
+#include <vector>
+
 namespace srp {
     class App {
         public:
             static constexpr int WIDTH = 800;
             static constexpr int HEIGHT = 600;
 
+            App();
+            ~App();
+
+            App(const App &) = delete;
+            App &operator=(const App &) = delete;
+
             void run();
         
         private:
+            void createPipelineLayout();
+            void createPipeline();
+            void createCommandBuffers();
+            void drawFrame();
+
             SrpWindow srpWindow{WIDTH, HEIGHT, "Sierpinski triangle"};
             SrpDevice srpDevice{srpWindow};
             SrpSwapChain srpSwapChain{srpDevice, srpWindow.getExtent()};
-            SrpPipeline srpPipeline{
-                srpDevice, 
-                "../shaders/simple_shader.vert.spv", 
-                "../shaders/simple_shader.frag.spv", 
-                SrpPipeline::defaultPipelineConfigInfo(WIDTH, HEIGHT)
-            };
+            std::unique_ptr<SrpPipeline> srpPipeline;
+            VkPipelineLayout pipelineLayout;
+            std::vector<VkCommandBuffer> commandBuffers;
     };
 }
