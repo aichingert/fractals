@@ -1,6 +1,6 @@
 #pragma once
 
-#include "srp_device.hpp"
+#include "device.hpp"
 
 // vulkan headers
 #include <vulkan/vulkan.h>
@@ -11,15 +11,15 @@
 
 namespace srp {
 
-class SrpSwapChain {
+class SwapChain {
  public:
   static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
 
-  SrpSwapChain(SrpDevice &deviceRef, VkExtent2D windowExtent);
-  ~SrpSwapChain();
+  SwapChain(Device &deviceRef, VkExtent2D windowExtent);
+  ~SwapChain();
 
-  SrpSwapChain(const SrpSwapChain &) = delete;
-  void operator=(const SrpSwapChain &) = delete;
+  SwapChain(const SwapChain &) = delete;
+  void operator=(const SwapChain &) = delete;
 
   VkFramebuffer getFrameBuffer(int index) { return swapChainFramebuffers[index]; }
   VkRenderPass getRenderPass() { return renderPass; }
@@ -65,7 +65,7 @@ class SrpSwapChain {
   std::vector<VkImage> swapChainImages;
   std::vector<VkImageView> swapChainImageViews;
 
-  SrpDevice &device;
+  Device &device;
   VkExtent2D windowExtent;
 
   VkSwapchainKHR swapChain;

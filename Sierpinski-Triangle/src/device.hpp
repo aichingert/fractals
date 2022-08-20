@@ -1,6 +1,6 @@
 #pragma once
 
-#include "srp_window.hpp"
+#include "window.hpp"
 
 // std lib headers
 #include <string>
@@ -22,7 +22,7 @@ struct QueueFamilyIndices {
   bool isComplete() { return graphicsFamilyHasValue && presentFamilyHasValue; }
 };
 
-class SrpDevice {
+class Device {
  public:
 #ifdef NDEBUG
   const bool enableValidationLayers = false;
@@ -30,14 +30,14 @@ class SrpDevice {
   const bool enableValidationLayers = true;
 #endif
 
-  SrpDevice(SrpWindow &window);
-  ~SrpDevice();
+  Device(Window &window);
+  ~Device();
 
   // Not copyable or movable
-  SrpDevice(const SrpDevice &) = delete;
-  void operator=(const SrpDevice &) = delete;
-  SrpDevice(SrpDevice &&) = delete;
-  SrpDevice &operator=(SrpDevice &&) = delete;
+  Device(const Device &) = delete;
+  void operator=(const Device &) = delete;
+  Device(Device &&) = delete;
+  Device &operator=(Device &&) = delete;
 
   VkCommandPool getCommandPool() { return commandPool; }
   VkDevice device() { return device_; }
@@ -93,7 +93,7 @@ class SrpDevice {
   VkInstance instance;
   VkDebugUtilsMessengerEXT debugMessenger;
   VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
-  SrpWindow &window;
+  Window &window;
   VkCommandPool commandPool;
 
   VkDevice device_;

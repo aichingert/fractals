@@ -1,9 +1,10 @@
 #pragma once
 
-#include "srp_window.hpp"
-#include "srp_pipeline.hpp"
-#include "srp_device.hpp"
-#include "srp_swap_chain.hpp"
+#include "window.hpp"
+#include "pipeline.hpp"
+#include "device.hpp"
+#include "swap_chain.hpp"
+#include "model.hpp"
 
 #include <memory>
 #include <vector>
@@ -23,16 +24,19 @@ namespace srp {
             void run();
         
         private:
+            void sierpinski(std::vector<Model::Vertex> &vertices,int depth,glm::vec2 left,glm::vec2 right,glm::vec2 top);
+            void loadModels();
             void createPipelineLayout();
             void createPipeline();
             void createCommandBuffers();
             void drawFrame();
 
-            SrpWindow srpWindow{WIDTH, HEIGHT, "Sierpinski triangle"};
-            SrpDevice srpDevice{srpWindow};
-            SrpSwapChain srpSwapChain{srpDevice, srpWindow.getExtent()};
-            std::unique_ptr<SrpPipeline> srpPipeline;
+            Window window{WIDTH, HEIGHT, "Sierpinski triangle"};
+            Device device{window};
+            SwapChain swapChain{device, window.getExtent()};
+            std::unique_ptr<Pipeline> pipeline;
             VkPipelineLayout pipelineLayout;
             std::vector<VkCommandBuffer> commandBuffers;
+            std::unique_ptr<Model>  model;
     };
 }

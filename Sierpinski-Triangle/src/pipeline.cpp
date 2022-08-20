@@ -1,4 +1,5 @@
-#include "srp_pipeline.hpp"
+#include "pipeline.hpp"
+#include "model.hpp"
 
 #include <fstream>
 #include <stdexcept>
@@ -7,22 +8,22 @@
 
 namespace srp {
 
-    SrpPipeline::SrpPipeline(
-                SrpDevice &device, 
+    Pipeline::Pipeline(
+                Device &device, 
                 const std::string &vertFilepath, 
                 const std::string &fragFilepath, 
                 const PipelineConfigInfo &configInfo) 
-                : srpDevice{device} {
+                : device{device} {
         createGraphicsPipeline(vertFilepath, fragFilepath, configInfo);
     }
 
-    SrpPipeline::~SrpPipeline() {
-        vkDestroyShaderModule(srpDevice.device(), vertShaderModule, nullptr);
-        vkDestroyShaderModule(srpDevice.device(), fragShaderModule, nullptr);
-        vkDestroyPipeline(srpDevice.device(), graphicsPipeline, nullptr);
+    Pipeline::~Pipeline() {
+        vkDestroyShaderModule(device.device(), vertShaderModule, nullptr);
+        vkDestroyShaderModule(device.device(), fragShaderModule, nullptr);
+        vkDestroyPipeline(device.device(), graphicsPipeline, nullptr);
     }
 
-    std::vector<char> SrpPipeline::readFile(const std::string &filepath) {
+    std::vector<char> Pipeline::readFile(const std::string &filepath) {
 
         std::ifstream file{filepath, std::ios::ate | std::ios::binary};
 
@@ -40,7 +41,7 @@ namespace srp {
         return buffer;
     }
 
-    void SrpPipeline::createGraphicsPipeline(
+    void Pipeline::createGraphicsPipeline(
             const std::string &vertFilepath, 
             const std::string &fragFilepath,
             const PipelineConfigInfo &configInfo) {
@@ -71,12 +72,15 @@ namespace srp {
         shaderStages[1].pNext = nullptr;
         shaderStages[1].pSpecializationInfo = nullptr;
 
+    	auto bindingDescriptions = Model::Vertex::getBindingDescription();
+        auto attributeDescriptions = Model::Vertex::getAttributeDescription();
+
         VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
         vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-        vertexInputInfo.vertexAttributeDescriptionCount = 0;
-        vertexInputInfo.vertexBindingDescriptionCount = 0;
-        vertexInputInfo.pVertexAttributeDescriptions = nullptr;
-        vertexInputInfo.pVertexBindingDescriptions = nullptr;
+        vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
+        vertexInputInfo.vertexBindingDescriptionCount = static_cast<uint32_t>(bindingDescriptions.size());
+        vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
+        vertexInputInfo.pVertexBindingDescriptions = bindingDescriptions.data();
 
 
         VkPipelineViewportStateCreateInfo viewportInfo{};
@@ -107,7 +111,7 @@ namespace srp {
         pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
         if (vkCreateGraphicsPipelines(
-                srpDevice.device(),
+                device.device(),
                 VK_NULL_HANDLE,
                 1,
                 &pipelineInfo,
@@ -117,23 +121,23 @@ namespace srp {
         }
     }
 
-    void SrpPipeline::createShaderModule(const std::vector<char> &code, VkShaderModule *shaderModule) {
+    void Pipeline::createShaderModule(const std::vector<char> &code, VkShaderModule *shaderModule) {
         VkShaderModuleCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
         createInfo.codeSize = code.size();
         createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
 
-        if (vkCreateShaderModule(srpDevice.device(), &createInfo, nullptr, shaderModule) != VK_SUCCESS) {
+        if (vkCreateShaderModule(device.device(), &createInfo, nullptr, shaderModule) != VK_SUCCESS) {
             throw std::runtime_error("Failed to create shader module");
         }
     }
 
-    void SrpPipeline::bind(VkCommandBuffer commandBuffer) {
+    void Pipeline::bind(VkCommandBuffer commandBuffer) {
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
     }
 
 
-    PipelineConfigInfo SrpPipeline::defaultPipelineConfigInfo(uint32_t width, uint32_t height) {
+    PipelineConfigInfo Pipeline::defaultPipelineConfigInfo(uint32_t width, uint32_t height) {
         PipelineConfigInfo configInfo{};
 
         configInfo.inputAssemblyInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;

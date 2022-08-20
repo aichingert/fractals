@@ -7,14 +7,14 @@
 
 namespace srp {
 
-    class SrpWindow {
+    class Window {
 
         public:
-            SrpWindow(int w, int h, std::string name);
-            ~SrpWindow();
+            Window(int w, int h, std::string name);
+            ~Window();
 
-            SrpWindow(const SrpWindow &) = delete;
-            SrpWindow &operator=(const SrpWindow &) = delete;
+            Window(const Window &) = delete;
+            Window &operator=(const Window &) = delete;
 
             bool shouldClose() { return glfwWindowShouldClose(window); }
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "srp_device.hpp"
+#include "device.hpp"
 
 #include <string>
 #include <vector>
@@ -21,17 +21,17 @@ namespace srp {
         uint32_t subpass = 0;
     };
 
-    class SrpPipeline {
+    class Pipeline {
         public:
-            SrpPipeline(
-                SrpDevice &device, 
+            Pipeline(
+                Device &device, 
                 const std::string &vertFilepath, 
                 const std::string &fragFilepath, 
                 const PipelineConfigInfo &configInfo);
-            ~SrpPipeline();
+            ~Pipeline();
 
-            SrpPipeline(const SrpPipeline&) = delete;
-            void operator=(const SrpPipeline&) = delete;
+            Pipeline(const Pipeline&) = delete;
+            void operator=(const Pipeline&) = delete;
 
             static PipelineConfigInfo defaultPipelineConfigInfo(uint32_t width, uint32_t height);
 
@@ -46,7 +46,7 @@ namespace srp {
 
             void createShaderModule(const std::vector<char> &code, VkShaderModule *shaderModule);
 
-            SrpDevice &srpDevice;
+            Device &device;
             VkPipeline graphicsPipeline;
             VkShaderModule vertShaderModule;
             VkShaderModule fragShaderModule;

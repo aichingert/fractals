@@ -1,7 +1,7 @@
 # Sierpinski triangle
 This is my first time using vulkan
 
-## First triangle
+## Sierpinski Triangle
 <img src="Image/triangle.png" />
 
 ## Credits
